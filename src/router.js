@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
+import auth from "@/modules/auth/router";
 import project from "@/modules/project/router";
 
 export default function createRoutes(context) {
   const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
-      project
+      ...auth,
+      ...project,
     ],
   });
 

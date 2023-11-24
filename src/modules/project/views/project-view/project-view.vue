@@ -1,7 +1,10 @@
 <script setup>
+import { ref } from "vue";
 import { useProjectList } from "@/modules/project/hooks/use-projects";
 
-const projects = useProjectList();
+const filter = ref("");
+
+const projects = useProjectList({ filter });
 </script>
 
 <template>
