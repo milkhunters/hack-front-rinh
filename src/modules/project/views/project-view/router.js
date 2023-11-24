@@ -1,5 +1,5 @@
 import ProjectView from "./project-view.vue";
-import { projectListLoader } from "./loader";
+import { projectListLoader } from "../../loader";
 
 export default {
   path: "/projects",

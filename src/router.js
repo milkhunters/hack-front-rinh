@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import project from "@/views/project-view/router";
+import project from "@/modules/project/router";
 
 export default function createRoutes(context) {
   const router = createRouter({

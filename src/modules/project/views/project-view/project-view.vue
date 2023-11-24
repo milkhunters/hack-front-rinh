@@ -1,5 +1,5 @@
 <script setup>
-import { useProjectList } from "./hooks/use-projects";
+import { useProjectList } from "@/modules/project/hooks/use-projects";
 
 const projects = useProjectList();
 </script>
