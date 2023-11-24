@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 import project from "@/views/project-view/router";
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    project
-  ],
-});
+export default function createRoutes(context) {
+  const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+      project
+    ],
+  });
 
-export default router;
+  router.beforeEach((to) => {
+    if (to.meta.load) to.meta.load(context);
+  });
+
+  return router;
+}

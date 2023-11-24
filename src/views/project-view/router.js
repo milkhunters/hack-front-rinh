@@ -1,10 +1,9 @@
 import ProjectView from "./project-view.vue";
-
-async function getProjects() {}
+import { projectListLoader } from "./loader";
 
 export default {
   path: "/projects",
   name: "projects",
   component: ProjectView,
-  meta: { requiresAuth: true, load: getProjects },
+  meta: { requiresAuth: true, load: projectListLoader },
 };
