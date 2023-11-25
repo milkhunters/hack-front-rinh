@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
+import useLayout from "@/common/hooks/use-layout";
 import { useProjectList } from "@/modules/project/hooks/use-projects";
+
+useLayout("default");
 
 const filter = ref("");
 
