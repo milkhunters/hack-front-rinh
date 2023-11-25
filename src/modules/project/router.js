@@ -1,17 +1,21 @@
-import ProjectView from "./views/project-view/project-view.vue";
-import JoinView from "./views/join-view/join-view.vue";
-import { projectListLoader } from "./loader";
+import { projectListLoader, taskListLoader } from "./loader";
 
 export default [
   {
     path: "/projects",
     name: "projects",
-    component: ProjectView,
+    component: () => import("./views/project-view/project-view.vue"),
     meta: { requiresAuth: true, load: projectListLoader },
   },
   {
     path: "/join/:projectId",
     name: "join",
-    component: JoinView,
+    component: () => import("./views/join-view/join-view.vue"),
+  },
+  {
+    path: "/tasks",
+    name: "tasks",
+    component: () => import("./views/task-view/task-view.vue"),
+    meta: { requiresAuth: true, load: taskListLoader },
   },
 ];

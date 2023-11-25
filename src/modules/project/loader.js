@@ -8,3 +8,6 @@ export function projectListLoader({ api, queryClient }) {
   });
   queryClient.ensureQueryData(query);
 }
+
+export function taskListLoader({ api, queryClient }) {
+}
