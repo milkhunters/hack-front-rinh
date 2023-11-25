@@ -18,4 +18,10 @@ export default [
     component: () => import("./views/task-view/task-view.vue"),
     meta: { requiresAuth: true, load: taskListLoader },
   },
+  {
+    path: "/wiki",
+    name: "wiki",
+    component: () => import("./views/wiki-view/wiki-view.vue"),
+    meta: { requiresAuth: true, load: taskListLoader },
+  },
 ];
