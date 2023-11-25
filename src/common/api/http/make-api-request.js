@@ -1,37 +1,48 @@
-import { toCamelCase, toSnakeCase } from "./formating.js";
+import { toCamelCase, toSnakeCase } from '@/lib/api/http/common/format';
 
-export default async function makeApiRequest(service, method, data = {}) {
-  const request = toSnakeCase(data);
-  const url = makeUrl(service, request.query ?? {});
-  const body = makeBody(method, request.data);
-  const contentType = makeContentType(method, request.data);
-  const response = await fetch(url, { method, body, credentials: "include", headers: contentType });
-  return await getResult(response);
-}
+const REFRESH_TOKENS_URL = `${import.meta.env.VITE_API_URL}/ums/auth/refresh_tokens`;
 
-function makeUrl(service, query) {
-  const url = new URL(import.meta.env.VITE_BACKEND_URL + service);
-  for (const [key, value] of Object.entries(query))
-    if (value != null) url.searchParams.set(key, value?.toString());
-  return url;
-}
+const toApiRequest = (data) => {
+	const request = toSnakeCase(data);
+	return JSON.stringify(request);
+};
 
-function makeBody(method, data) {
-  if (!data || ["GET", "HEAD"].includes(method)) return null;
-  if (data instanceof FormData) return data;
-  return JSON.stringify(data);
-}
+const errorToResult = (error) => {
+	if (error.type === 1) return error.content;
+	if (error.type === 2) {
+		const result = error.content.map(({ field, message }) => [field, message.split(', ')[1]]);
+		return toCamelCase(Object.fromEntries(result));
+	}
+	throw new Error(`Unknown api error type ${error.type}.`);
+};
 
-function makeContentType(method, data) {
-  if (!data || ["GET", "HEAD"].includes(method) || data instanceof FormData) return {};
-  return { "Content-Type": "application/json" };
-}
+const tryParse = async (response) => {
+	try {
+		return await response.json();
+	} catch {
+		return null;
+	}
+};
 
-async function getResult(response) {
-  try {
-    const result = await response.json();
-    return toCamelCase(result);
-  } catch {
-    return null;
-  }
-}
+const toApiResponse = async (data) => {
+	const response = await tryParse(data);
+	if (!response) return { succeed: data.ok };
+	if (response.error == null && response.content == null)
+		return { succeed: data.ok, content: response };
+	const succeed = response.error === null;
+	const content = succeed ? toCamelCase(response.content) : errorToResult(response.error);
+	return { succeed, content };
+};
+
+export const makeApiRequest = async (url, method, { data = {}, sendCookies = true, retry = true } = {}) => {
+	const hasBody = !['GET', 'HEAD'].includes(method);
+	const body = hasBody ? toApiRequest(data) : undefined;
+	const headers = { 'Content-Type': 'application/json' };
+	const credentials = sendCookies ? 'include' : undefined;
+	const response = await fetch(url, { method, headers, body, credentials });
+	if (response.status === 403 && retry) {
+		await makeApiRequest(REFRESH_TOKENS_URL, 'POST', { sendCookies: true, retry: false });
+		return await makeApiRequest(url, method, { data, sendCookies, retry: false });
+	}
+	return await toApiResponse(response);
+};

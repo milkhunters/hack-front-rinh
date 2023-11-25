@@ -1,17 +1,20 @@
 <script setup>
-import defaultLayout from '@/common/layouts/default-layout.vue';
+import { computed, provide, ref } from "vue";
+import AuthLayout from "@/modules/auth/layouts/auth-layout.vue";
+import DefaultLayout from "@/modules/project/layouts/default-layout.vue";
+import { LAYOUT_KEY } from "@/common/keys";
 
-const auth = true;
+const layout = ref({ layout: "default", data: {} });
 
+const layoutComponent = computed(() => {
+  return layout.value.layout === "auth" ? AuthLayout : DefaultLayout;
+});
+
+provide(LAYOUT_KEY, layout);
 </script>
 
 <template>
-<default-layout v-if="auth"/>
-<div v-else>
-  <router-view/>
-</div>
+  <component :is="layoutComponent" v-bind="layout.data">
+    <router-view />
+  </component>
 </template>
-
-<style module lang="scss">
-
-</style>

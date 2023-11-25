@@ -9,7 +9,7 @@ const useUserStore = defineStore("user", () => {
   const user = ref(null);
 
   const login = useMutation({
-    mutationFn: () => void api.auth.login,
+    mutationFn: api.auth.login,
     onSuccess({ succeed, content }) {
       if (succeed) {
         user.value = content;
@@ -18,7 +18,7 @@ const useUserStore = defineStore("user", () => {
   });
 
   const logout = useMutation({
-    mutationFn: () => void api.auth.logout,
+    mutationFn: api.auth.logout,
     onSuccess({ succeed }) {
       if (succeed) {
         user.value = null;
@@ -27,7 +27,7 @@ const useUserStore = defineStore("user", () => {
   });
 
   const register = useMutation({
-    mutationFn: () => void api.auth.register,
+    mutationFn: api.auth.register,
     onSuccess({ succeed, content }) {
       if (succeed) {
         user.value = content;
@@ -35,7 +35,11 @@ const useUserStore = defineStore("user", () => {
     },
   });
 
-  return { user, login, logout, register };
+  const sendCode = useMutation({
+    mutationFn: api.auth.sendCode,
+  });
+
+  return { user, login, logout, register, sendCode };
 });
 
 export default useUserStore;
