@@ -1,7 +1,5 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { marked } from "marked";
-import DOMPurify from "dompurify";
 
 const articles = reactive([
   {
@@ -22,10 +20,9 @@ const articles = reactive([
   },
 ]);
 
-
 const getRandomColor = () => {
-    const colors = ['is-info', 'is-link', 'is-success', 'is-danger'];
-    return colors[Math.floor(Math.random() * colors.length)];
+  const colors = ["is-info", "is-link", "is-success", "is-danger"];
+  return colors[Math.floor(Math.random() * colors.length)];
 };
 
 const addArticle = (article) => {
@@ -45,7 +42,6 @@ const setCurrentArticle = (id) => {
   const selectedArticle = articles.find((a) => a.id === id);
   if (selectedArticle) {
     currentArticle.value = { ...selectedArticle };
-    currentArticle.value.body = DOMPurify.sanitize(marked(selectedArticle.body));
   }
 };
 </script>
@@ -76,7 +72,11 @@ const setCurrentArticle = (id) => {
       <p class="menu-label"><b>Статьи</b></p>
       <ul class="menu-list">
         <li v-for="article in articles" :key="article.id">
-          <a :class="{'is-active': article.id === currentArticle.id}" @click="setCurrentArticle(article.id)">{{ article.title.slice(0, 40) + "..." }}</a>
+          <a
+            :class="{ 'is-active': article.id === currentArticle.id }"
+            @click="setCurrentArticle(article.id)"
+            >{{ article.title.slice(0, 40) + "..." }}</a
+          >
         </li>
       </ul>
     </aside>
@@ -85,7 +85,6 @@ const setCurrentArticle = (id) => {
       <div class="card px-6">
         <div class="card-content">
           <div class="media">
-        
             <div class="media-content">
               <p class="title is-3">{{ currentArticle.title }}</p>
               <p class="subtitle is-6">{{ currentArticle.author }}</p>
@@ -94,13 +93,12 @@ const setCurrentArticle = (id) => {
 
           <div class="content is-size-5">
             <a v-for="(tag, index) in currentArticle.tags" :key="index">
-              <span :class="getRandomColor()" class="tag is-light mr-2 mt-10" >{{ tag }}</span>
+              <span :class="getRandomColor()" class="tag is-light mr-2 mt-10">{{ tag }}</span>
             </a>
 
             <br />
             <br />
             {{ currentArticle.body }}
-            
           </div>
         </div>
       </div>
@@ -121,5 +119,4 @@ const setCurrentArticle = (id) => {
   width: 100%;
   height: 100vh;
 }
-
 </style>
