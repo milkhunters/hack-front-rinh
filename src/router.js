@@ -1,14 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import project from "@/views/project-view/router";
-import task from "@/views/task-view/router";
-import login from "@/views/login-view/router.js";
-import register from "@/views/registration-view/router.js";
+import auth from "@/modules/auth/router";
+import project from "@/modules/project/router";
 
-const auth = true;
+export default function createRoutes(context) {
+  const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+      ...auth,
+      ...project,
+    ],
+  });
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: auth ? [project, task] : [login, register],
-});
+  router.beforeEach((to) => {
+    if (to.meta?.load) to.meta.load(context);
+  });
 
-export default router;
+  return router;
+}
