@@ -5,6 +5,7 @@ import App from "./App.vue";
 import createApi from "./api";
 import createRoutes from "./router";
 import { API_KEY } from "@/common/hooks/use-api";
+import "./styles/bulma.scss";
 
 const app = createApp(App);
 const api = createApi("http");
