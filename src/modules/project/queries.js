@@ -6,6 +6,6 @@ const PROJECT_KEYS = {
 export function projectListQuery(api, meta) {
   return {
     queryKey: PROJECT_KEYS.list(meta),
-    queryFn: ({ queryKey: [{ meta }] }) => api.projects.getMyProjects(meta),
+    queryFn: ({ queryKey: [{ meta }] }) => api.projects.getAll(meta),
   };
 }

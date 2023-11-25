@@ -12,7 +12,7 @@ export default function createRoutes(context) {
   });
 
   router.beforeEach((to) => {
-    if (to.meta.load) to.meta.load(context);
+    if (to.meta?.load) to.meta.load(context);
   });
 
   return router;
