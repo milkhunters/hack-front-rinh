@@ -18,7 +18,7 @@ const useUserStore = defineStore("user", () => {
   });
 
   const logout = useMutation({
-    metationFn: () => void api.auth.logout,
+    mutationFn: () => void api.auth.logout,
     onSuccess({ succeed }) {
       if (succeed) {
         user.value = null;
