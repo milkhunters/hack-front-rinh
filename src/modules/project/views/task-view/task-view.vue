@@ -1,7 +1,10 @@
 <script setup>
 import { reactive } from "vue";
+import useLayout from "@/common/hooks/use-layout";
 import taskCard from "./components/task-card.vue";
 import modalComponent from "@/common/components/modal/modal-component.vue";
+
+useLayout("default");
 
 const statuses = reactive([
   {

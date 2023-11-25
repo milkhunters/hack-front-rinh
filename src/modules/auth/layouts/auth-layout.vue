@@ -1,25 +1,27 @@
 <script setup>
+
 defineProps({
   title: {
     type: String,
     required: true,
   },
 });
+
 </script>
 
 <template>
-  <div :class="styles.wrapper">
-    <div :class="styles.inner">
-      <header :class="styles.header">
-        <span :class="styles.title">TeamPulse ID</span>
-        <span :class="styles.subtitle">{{ title }}</span>
+  <div :class="$style.wrapper">
+    <div :class="$style.inner">
+      <header :class="$style.header">
+        <span :class="$style.title">TeamPulse ID</span>
+        <span :class="$style.subtitle">{{ title }}</span>
       </header>
       <slot></slot>
     </div>
   </div>
 </template>
 
-<style module="styles" lang="scss">
+<style module lang="scss">
 @import "@/styles/variables.scss";
 
 .wrapper {
