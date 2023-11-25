@@ -1,7 +1,17 @@
 <script setup>
-import { RouterView } from "vue-router";
+import defaultLayout from '@/common/layouts/default-layout.vue';
+
+const auth = true;
+
 </script>
 
 <template>
-  <RouterView />
+<default-layout v-if="auth"/>
+<div v-else>
+  <router-view/>
+</div>
 </template>
+
+<style module lang="scss">
+
+</style>
