@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { defineStore } from "pinia";
 import { useMutation } from "@tanstack/vue-query";
 import { useApi } from "@/common/hooks/use-api";
@@ -8,8 +8,15 @@ const useUserStore = defineStore("user", () => {
 
   const user = ref(null);
 
+  async function fetch() {
+    const { succeed, content } = await api.auth.getUser();
+    if (succeed) {
+      user.value = content;
+    }
+  }
+
   const login = useMutation({
-    mutationFn: () => void api.auth.login,
+    mutationFn: api.auth.login,
     onSuccess({ succeed, content }) {
       if (succeed) {
         user.value = content;
@@ -18,7 +25,7 @@ const useUserStore = defineStore("user", () => {
   });
 
   const logout = useMutation({
-    mutationFn: () => void api.auth.logout,
+    mutationFn: api.auth.logout,
     onSuccess({ succeed }) {
       if (succeed) {
         user.value = null;
@@ -27,7 +34,7 @@ const useUserStore = defineStore("user", () => {
   });
 
   const register = useMutation({
-    mutationFn: () => void api.auth.register,
+    mutationFn: api.auth.register,
     onSuccess({ succeed, content }) {
       if (succeed) {
         user.value = content;
@@ -35,7 +42,11 @@ const useUserStore = defineStore("user", () => {
     },
   });
 
-  return { user, login, logout, register };
+  const sendCode = useMutation({
+    mutationFn: api.auth.sendCode,
+  });
+
+  return { user, fetch, login, logout, register, sendCode };
 });
 
 export default useUserStore;

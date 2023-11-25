@@ -1,37 +1,56 @@
-import { toCamelCase, toSnakeCase } from "./formating.js";
+import { toCamelCase, toSnakeCase } from "./format";
 
-export default async function makeApiRequest(service, method, data = {}) {
+const REFRESH_TOKENS_URL = `/ums/auth/refresh_tokens`;
+
+export default async function makeApiRequest(
+  service,
+  method,
+  { data = {}, sendCookies = true, retry = true } = {},
+) {
+  const hasBody = !["GET", "HEAD"].includes(method);
+  const body = hasBody ? toApiRequest(data) : undefined;
+  const headers = { "Content-Type": "application/json" };
+  const credentials = sendCookies ? "include" : undefined;
+  const url = import.meta.env.VITE_API_URL + service;
+  const response = await fetch(url, { method, headers, body, credentials });
+  if (response.status === 403 && retry) {
+    await makeApiRequest(REFRESH_TOKENS_URL, "POST", { sendCookies: true, retry: false });
+    return await makeApiRequest(url, method, { data, sendCookies, retry: false });
+  }
+  return await toApiResponse(response);
+}
+
+function toApiRequest(data) {
   const request = toSnakeCase(data);
-  const url = makeUrl(service, request.query ?? {});
-  const body = makeBody(method, request.data);
-  const contentType = makeContentType(method, request.data);
-  const response = await fetch(url, { method, body, credentials: "include", headers: contentType });
-  return await getResult(response);
+  return JSON.stringify(request);
 }
 
-function makeUrl(service, query) {
-  const url = new URL(import.meta.env.VITE_BACKEND_URL + service);
-  for (const [key, value] of Object.entries(query))
-    if (value != null) url.searchParams.set(key, value?.toString());
-  return url;
+async function toApiResponse(data) {
+  const response = await tryParse(data);
+  if (!response) {
+    return { succeed: data.ok };
+  }
+  if (response.error == null && response.content == null) {
+    return { succeed: data.ok, content: response };
+  }
+  const succeed = response.error === null;
+  const content = succeed ? toCamelCase(response.content) : errorToResult(response.error);
+  return { succeed, content };
 }
 
-function makeBody(method, data) {
-  if (!data || ["GET", "HEAD"].includes(method)) return null;
-  if (data instanceof FormData) return data;
-  return JSON.stringify(data);
-}
-
-function makeContentType(method, data) {
-  if (!data || ["GET", "HEAD"].includes(method) || data instanceof FormData) return {};
-  return { "Content-Type": "application/json" };
-}
-
-async function getResult(response) {
+async function tryParse(response) {
   try {
-    const result = await response.json();
-    return toCamelCase(result);
+    return await response.json();
   } catch {
     return null;
   }
+}
+
+function errorToResult(error) {
+  if (error.type === 1) return error.content;
+  if (error.type === 2) {
+    const result = error.content.map(({ field, message }) => [field, message]);
+    return toCamelCase(Object.fromEntries(result));
+  }
+  throw new Error(`Unknown api error type ${error.type}.`);
 }
