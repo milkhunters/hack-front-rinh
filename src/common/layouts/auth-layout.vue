@@ -12,7 +12,7 @@ defineProps({
     <div :class="styles.inner">
       <header :class="styles.header">
         <span :class="styles.title">TeamPulse ID</span>
-        <span :class="styles.suptitle">{{ title }}</span>
+        <span :class="styles.subtitle">{{ title }}</span>
       </header>
       <slot></slot>
     </div>
@@ -20,7 +20,8 @@ defineProps({
 </template>
 
 <style module="styles" lang="scss">
-@import '@/styles/variables.scss';
+@import "@/styles/variables.scss";
+
 .wrapper {
   width: 100%;
   height: 100vh;
@@ -61,7 +62,7 @@ defineProps({
   cursor: inherit;
 }
 
-.suptitle {
+.subtitle {
   margin: 8px;
   font-weight: 400;
   font-size: 17px;
@@ -83,19 +84,20 @@ form {
   flex-direction: column;
   width: 450px;
   height: auto;
-  //border: 1px solid black;
 }
 
 @media (max-width: 700px) {
   .wrapper {
     background-color: white;
   }
+
   .inner {
     width: 100%;
     box-shadow: none;
     padding: 20px;
     overflow-y: auto;
   }
+
   form {
     width: 100%;
   }

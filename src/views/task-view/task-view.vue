@@ -201,27 +201,12 @@ const tasks = reactive([
   },
 ]);
 
-const onDragStart = (event, item) => {
-  event.dataTransfer.dropEffect = "move";
-  event.dataTransfer.effectAllowed = "move";
-  event.dataTransfer.setData("itemId", item.id.toString());
-};
-
-const onDrop = (event, statusId) => {
-  const itemId = parseInt(event.dataTransfer.getData("itemId"));
-  tasks.values = tasks.map((task) => {
-    if (task.id === itemId) task.statusId = statusId;
-    return task;
-  });
-};
-
 const newTask = reactive({
   title: "",
   description: "",
   statusId: null,
   color: "#D8DCFF",
 });
-
 
 const colors = reactive(["#D8DCFF", "#ABE9CE", "#FEC6B7", "#FFDFBA", "#F2BAE1"]);
 
@@ -231,32 +216,30 @@ const modals = reactive({
   addProject: false,
 });
 
-const countTasksByStatusId = (statusId) => {
+function countTasksByStatusId(statusId) {
   return tasks.filter((task) => task.statusId === statusId).length;
-};
+}
 
-const openModal = (modal) => {
+function openModal(modal) {
   modals[modal] = true;
-};
+}
 
-const closeModal = (modal) => {
+function closeModal(modal) {
   modals[modal] = false;
-};
+}
 
-const addTask = () => {
-  newTask.id = Math.floor(Math.random() * 1000000);
-  tasks.push({...newTask});
+function addTask() {
   newTask.title = "";
   newTask.description = "";
   newTask.statusId = null;
-  closeModal('addTask');
-};
+  closeModal("addTask");
+}
 </script>
 
 <template>
-  <div :class="$style.flow" @click.stop="closeAllDropdowns">
+  <div :class="$style.flow" @click="closeAllDropdowns">
     <modal-component
-      :close="() => closeModal('addTask')"
+      :close="closeModal('addTask')"
       :isActive="modals.addTask"
       title="Новая карточка"
       footer="active"
@@ -269,7 +252,7 @@ const addTask = () => {
         placeholder="Введите название задачи..."
       />
 
-      <label class='mt-2' for="description">Описание задачи</label>
+      <label class="mt-2" for="description">Описание задачи</label>
       <input
         class="input"
         type="text"
@@ -277,29 +260,23 @@ const addTask = () => {
         placeholder="Введите описание задачи..."
       />
 
-      <label class='mt-2' for="login">Цвет</label>
+      <label class="mt-2" for="login">Цвет</label>
       <div class="select">
         <select v-model="newTask.color">
-          <option :style="{ backgroundColor: color }" v-for="(color, item) of colors" :key="item">
+          <option :style="{ backgroundColor: color }" v-for="(color, index) in colors" :key="index">
             <div>{{ color }}</div>
           </option>
         </select>
       </div>
 
-      <br />
-      <br />
-
-      <button @click.stop="addTask" class="button is-primary">Добавить</button>
+      <button @click="addTask" class="button is-primary mt-2">Добавить</button>
     </modal-component>
 
     <main :class="$style.main">
       <div
         v-for="status in statuses"
         :key="status.id"
-        @drop="onDrop($event, status.id)"
         :class="$style.column"
-        @dragover.prevent
-        @dragenter.prevent
       >
         <div class="box mt-4">
           <div class="is-flex is-justify-content-center is-align-items-center title is-4">
@@ -316,18 +293,11 @@ const addTask = () => {
             :name="task.title"
             :date="task.date"
             :color="task.color"
-            @dragstart="onDragStart($event, task)"
-            draggable="true"
           >
           </task-card>
 
           <button
-            @click.stop="
-              () => {
-                openModal('addTask');
-                newTask.statusId = status.id;
-              }
-            "
+            @click="openModal('addTask')"
             class="button"
           >
             <span class="icon">
@@ -354,13 +324,11 @@ const addTask = () => {
 </template>
 
 <style module lang="scss">
-// Flow
 .flow {
   width: 100%;
   height: 100vh;
 }
 
-// Main
 .main {
   display: flex;
   padding: 0 0 0 30px;
@@ -368,14 +336,12 @@ const addTask = () => {
   height: 100%;
 }
 
-// Column
 .column {
   width: 400px;
   margin-right: 30px;
   margin-bottom: 20px;
 }
 
-// Add
 .add {
   font-size: 30px;
 }

@@ -1,6 +1,6 @@
 <script setup>
-import { reactive, ref, watch } from "vue";
-import { RouterView, useRoute } from "vue-router";
+import { reactive, ref } from "vue";
+import { RouterView } from "vue-router";
 
 const dropdowns = reactive({
   user: false,
@@ -9,21 +9,18 @@ const dropdowns = reactive({
   notifications: false,
 });
 
-const router = useRoute();
-
-const toggleDropdown = (key) => {
+function toggleDropdown(key) {
   closeAllDropdowns();
-  dropdowns[key] = !dropdowns[key];
-};
+  key.value = !key.value;
+}
 
-const closeAllDropdowns = () => {
-  for (let key in dropdowns) {
+function closeAllDropdowns() {
+  for (const key of Object.keys(dropdowns)) {
     dropdowns[key] = false;
   }
-};
+}
 
 const selectedBoard = ref("Доска");
-
 </script>
 
 <template>
@@ -58,10 +55,10 @@ const selectedBoard = ref("Доска");
         </div>
       </div>
       <div :class="$style.rigth">
-        <div :class="$style.notifications" @click.stop>
+        <div :class="$style.notifications">
           <div class="dropdown is-right" :class="{ 'is-active': dropdowns.notifications }">
             <div class="dropdown-trigger">
-              <i @click.stop="() => toggleDropdown('notifications')" class="fi fi-rr-cowbell"></i>
+              <i @click="toggleDropdown(dropdowns.notifications)" class="fi fi-rr-cowbell"></i>
             </div>
             <div class="dropdown-menu" role="menu">
               <div class="dropdown-content">
@@ -78,15 +75,12 @@ const selectedBoard = ref("Доска");
         <div :class="$style.avatar">
           <div class="dropdown is-right" :class="{ 'is-active': dropdowns.user }">
             <div class="dropdown-trigger">
-              <button class="button" @click.stop="() => toggleDropdown('user')">
+              <button class="button" @click="toggleDropdown(notifications.user)">
                 <b>Иванов И.П.</b>
               </button>
             </div>
             <div class="dropdown-menu" role="menu">
               <div class="dropdown-content">
-                <a href="#" class="dropdown-item"> Профиль </a>
-                <a class="dropdown-item"> Настройки </a>
-                <hr class="dropdown-divider" />
                 <a href="#" class="dropdown-item"> Выйти </a>
               </div>
             </div>
