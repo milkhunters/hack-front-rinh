@@ -1,3 +1,90 @@
+<script setup>
+import { reactive, ref, watch } from "vue";
+import { RouterView, useRoute, useRouter } from "vue-router";
+import ModalComponent from "@/common/components/modal/modal-component.vue";
+import SignButton from "@/common/components/sign-button/sign-button.vue";
+import ProjectButton from "@/modules/project/layouts/project-button/project-button.vue";
+import useProjectStore from "@/modules/project/stores/use-project-store";
+import { useCreateProjectMutation } from "@/modules/project/hooks/use-projects";
+import useUserStore from "@/modules/auth/stores/use-user-store";
+
+const newProject = ref({ title: "", endTime: new Date() });
+const isProjectModalOpen = ref(false);
+
+function openProjectModal() {
+  newProject.value = { title: "", endTime: new Date() };
+  isProjectModalOpen.value = true;
+}
+
+function closeProjectModal() {
+  isProjectModalOpen.value = false;
+}
+
+const createProjectMutation = useCreateProjectMutation();
+
+function createProject() {
+  const data = {
+    title: newProject.value.title,
+    startTime: new Date().toISOString(),
+    endTime: new Date(newProject.value.endTime).toISOString(),
+  };
+
+  createProjectMutation.mutate(data, {
+    onSuccess() {
+      closeProjectModal();
+    },
+  });
+}
+
+const dropdowns = reactive({
+  user: false,
+  workspace: false,
+  project: false,
+  notifications: false,
+});
+
+function closeAllDropdowns() {
+  for (const key of Object.keys(dropdowns)) {
+    dropdowns[key] = false;
+  }
+}
+
+const router = useRouter();
+
+function changeBoard(event) {
+  const route = event.target.value;
+  router.push({ name: route });
+}
+
+const projectStore = useProjectStore();
+const userStore = useUserStore();
+
+function logout() {
+  userStore.logout.mutate();
+  router.push({ name: "login" });
+}
+
+const route = useRoute();
+
+watch(
+  () => route.query.id,
+  (value) => {
+    projectStore.currentProjectId = value;
+  },
+);
+
+watch(
+  () => projectStore.currentProjectId,
+  (value) => {
+    router.push({ query: { id: value } });
+  },
+);
+
+function goToLogin() {
+  router.push({ name: "login" });
+}
+</script>
+
 <template>
   <modal-component :isActive="isProjectModalOpen" @close="closeProjectModal" title="Новый проект">
     <label for="name">Название проекта</label>
@@ -26,8 +113,7 @@
   <div :class="$style.flow" @click.stop="closeAllDropdowns">
     <header :class="$style.header">
       <div :class="$style.left">
-        <button class="button is-black is-medium is-bold"><b>RndTeam</b></button>
-        
+        <div class="is-black is-medium is-bold"><b>RndTeam</b></div>
         <div class="is-flex ml-4">
           <div v-if="projectStore.userProjects.data?.length" class="select is-rounded ml-2">
             <select v-model="projectStore.currentProjectId">
@@ -51,28 +137,19 @@
           />
         </div>
       </div>
-
-      <div :class="$style.right">
-        <div :class="$style.notifications">
-          <div class="dropdown is-right" :class="{ 'is-active': dropdowns.notifications }">
-            <!-- Your notification dropdown content -->
-          </div>
-        
-          <div v-if="userStore.user" :class="$style.avatar">
-            <div class="dropdown is-right" :class="{ 'is-active': dropdowns.user }">
-              <!-- Your user profile dropdown content -->
+      <div :class="$style.rigth">
+        <div :class="$style.avatar">
+          <div class="dropdown is-right" :class="{ 'is-active': dropdowns.user }">
+            <div class="dropdown-trigger">
+              <button v-if="userStore.user" class="button" @click="logout">
+                <b>{{ userStore.user?.firstName }}</b> - Выйти
+              </button>
+              <button v-else class="button" @click="goToLogin">Войти</button>
             </div>
-          </div>
-
-          <div v-if="userStore.user" :class="$style.avatar">
-            <button class="button" @click="logout">
-              Выйти
-            </button>
           </div>
         </div>
       </div>
     </header>
-
     <main :class="$style.main">
       <RouterView />
     </main>

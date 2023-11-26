@@ -56,7 +56,21 @@ export function useCreateTaskMutation(projectId, columnId) {
   return useMutation({
     mutationFn: (data) => api.projects.createTask({ columnId, ...data }),
     onSuccess() {
-      client.invalidateQueries({ queryKey: COLUMN_KEYS.list(projectId) });
+      client.invalidateQueries({ queryKey: PROJECT_KEYS.all });
     },
+  });
+}
+
+export function useUpdateTaskMutation() {
+  const api = useApi();
+  return useMutation({
+    mutationFn: api.projects.updateTask,
+  });
+}
+
+export function useUpdateColumnMutation() {
+  const api = useApi();
+  return useMutation({
+    mutationFn: api.projects.updateColumn,
   });
 }

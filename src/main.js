@@ -14,6 +14,7 @@ const queryClient = new QueryClient();
 app.use(createPinia());
 app.use(VueQueryPlugin);
 app.provide(API_KEY, api);
+
 app.use(createRoutes({ api, queryClient }));
 
 app.mount("#app");

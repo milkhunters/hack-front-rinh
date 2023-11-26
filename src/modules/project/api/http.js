@@ -31,3 +31,11 @@ export async function getColumns(projectId) {
 export async function createTask({ columnId, ...data }) {
   return await makeApiRequest(`/kanban/task/new?column_id=${columnId}`, "POST", { data });
 }
+
+export async function updateTask({ taskId, ...data }) {
+  return await makeApiRequest(`/kanban/task/${taskId}`, "PUT", { data });
+}
+
+export async function updateColumn({ columnId, ...data }) {
+  return await makeApiRequest(`/kanban/column/${columnId}`, "PUT", { data });
+}

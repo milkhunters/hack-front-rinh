@@ -27,5 +27,3 @@ defineProps({
     </div>
   </div>
 </template>
-
-<style module lang="css"></style>

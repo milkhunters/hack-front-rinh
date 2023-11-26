@@ -20,8 +20,13 @@ const newColumn = reactive({
 const projectStore = useProjectStore();
 
 function addColumn() {
-  projectStore.createColumn(newColumn.title);
-  emit("close");
+  projectStore.createColumn(newColumn.title, {
+    onSuccess({ succeed }) {
+      if (succeed) {
+        emit("close");
+      }
+    },
+  });
 }
 </script>
 
@@ -30,7 +35,7 @@ function addColumn() {
     v-if="isOpen"
     :isActive="isOpen"
     @close="$emit('close')"
-    title="Новая карточка"
+    title="Новая колонна"
     footer="active"
   >
     <label for="name">Название задачи</label>
@@ -44,5 +49,3 @@ function addColumn() {
     <button @click="addColumn" class="button is-primary mt-2">Добавить</button>
   </modal-component>
 </template>
-
-<style scoped lang="scss"></style>

@@ -31,13 +31,8 @@ const projectStore = useProjectStore();
 const createTaskMutation = useCreateTaskMutation(projectStore.currentProjectId, props.columnId);
 
 function addTask() {
-  createTaskMutation.mutate(newTask, {
-    onSuccess({ succeed }) {
-      if (succeed) {
-        emit("close");
-      }
-    },
-  });
+  createTaskMutation.mutate(newTask);
+  emit("close");
 }
 </script>
 
@@ -79,5 +74,3 @@ function addTask() {
     <button @click="addTask" class="button is-primary mt-2">Добавить</button>
   </modal-component>
 </template>
-
-<style scoped lang="scss"></style>

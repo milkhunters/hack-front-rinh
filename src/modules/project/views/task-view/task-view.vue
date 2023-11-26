@@ -6,6 +6,7 @@ import TaskColumnCreationModal from "@/modules/project/views/task-view/component
 import useLayout from "@/common/hooks/use-layout";
 import useModal from "@/common/hooks/use-modal";
 import useProjectStore from "@/modules/project/stores/use-project-store";
+import { useUpdateColumnMutation } from "@/modules/project/hooks/use-projects";
 
 useLayout("default");
 
@@ -21,6 +22,24 @@ watch(
     newColumns.value = data;
   },
 );
+
+const updateColumnMutation = useUpdateColumnMutation();
+
+function sendSequence(event) {
+  if (event.removed) {
+    return;
+  }
+
+  const target = event.added ?? event.moved;
+  const column = target.element;
+  const nextColumn = newColumns.value[target.newIndex + 1];
+
+  updateColumnMutation.mutate({
+    columnId: column.id,
+    title: column.title,
+    childId: nextColumn?.id ?? null,
+  });
+}
 </script>
 
 <template>
@@ -31,13 +50,9 @@ watch(
         @close="newColumnModal.close"
       />
       <template v-if="projectStore.projectColumns.isSuccess">
-        <draggable v-model="newColumns" group="columns" item-key="id">
+        <draggable :class="$style.dragged" v-model="newColumns" group="columns" item-key="id" @change="sendSequence">
           <template #item="{ element: column }">
-            <task-column
-              :id="column.id"
-              :title="column.title"
-              :tasks="column.tasks"
-            />
+            <task-column :id="column.id" :title="column.title" :tasks="column.tasks" />
           </template>
         </draggable>
       </template>
@@ -58,8 +73,11 @@ watch(
 </template>
 
 <style module lang="scss">
+.dragged {
+  display: flex;
+}
+
 .flow {
-  width: 100%;
   height: 100vh;
 }
 
