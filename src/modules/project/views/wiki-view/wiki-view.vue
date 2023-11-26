@@ -65,7 +65,7 @@ const setCurrentArticle = (id) => {
         </li>
 
         <li>
-          <buttom class="button is-primary is-outlined mt-4">Создать статью</buttom>
+          <button class="button is-primary is-outlined mt-4">Создать статью</button>
         </li>
       </ul>
 
