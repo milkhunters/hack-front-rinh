@@ -109,14 +109,6 @@ watch(
       <div :class="$style.left">
         <button class="button is-black is-medium is-bold"><b>RndTeam</b></button>
 
-        <div class="is-flex ml-4">
-          <div class="select is-rounded">
-            <select @change="changeBoard">
-              <option value="tasks">Доска</option>
-              <option value="wiki">Вики</option>
-            </select>
-          </div>
-
           <div v-if="projectStore.userProjects.data?.length" class="select is-rounded ml-2">
             <select v-model="projectStore.currentProjectId">
               <option
@@ -129,6 +121,8 @@ watch(
             </select>
           </div>
 
+          <project-button @click="changeBoard(tasks)" label="Доска" />
+          <project-button @click="changeBoard(wiki)" label="Вики" />
           <project-button @click="openProjectModal" label="Новый проект" />
           <project-button
             v-if="projectStore.currentProjectId"
@@ -158,8 +152,11 @@ watch(
         <div v-if="userStore.user" :class="$style.avatar">
           <div class="dropdown is-right" :class="{ 'is-active': dropdowns.user }">
             <div class="dropdown-trigger">
+              <button class="button"">
+                <b>{{ userStore.user?.firstName }}</b>
+              </button>
               <button class="button" @click="logout">
-                <b>{{ userStore.user?.firstName }}</b> - Выйти
+                Выйти
               </button>
             </div>
           </div>
