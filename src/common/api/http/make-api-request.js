@@ -15,7 +15,7 @@ export default async function makeApiRequest(
   const response = await fetch(url, { method, headers, body, credentials });
   if (response.status === 403 && retry) {
     await makeApiRequest(REFRESH_TOKENS_URL, "POST", { sendCookies: true, retry: false });
-    return await makeApiRequest(url, method, { data, sendCookies, retry: false });
+    return await makeApiRequest(service, method, { data, sendCookies, retry: false });
   }
   return await toApiResponse(response);
 }
