@@ -120,6 +120,7 @@ function goToLogin() {
             <select @change="changeBoard">
               <option value="tasks">Доска</option>
               <option value="wiki">Вики</option>
+              <option value="graph">Графики</option>
             </select>
           </div>
 

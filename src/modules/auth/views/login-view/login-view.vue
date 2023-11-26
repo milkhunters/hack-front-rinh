@@ -9,8 +9,8 @@ useLayout("auth", { title: "Войдите в личный кабинет" });
 
 const userStore = useUserStore();
 
-const username = ref("");
-const password = ref("");
+const username = ref("qwerqwer2");
+const password = ref("qwerqwerQ1");
 const error = ref(null);
 
 function clearError() {
