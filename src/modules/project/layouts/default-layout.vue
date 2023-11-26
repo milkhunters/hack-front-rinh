@@ -153,7 +153,7 @@ watch(
         <div v-if="userStore.user" :class="$style.avatar">
           <div class="dropdown is-right" :class="{ 'is-active': dropdowns.user }">
             <div class="dropdown-trigger">
-              <button class="button"">
+              <button class="button">
                 <b>{{ userStore.user?.firstName }}</b>
               </button>
               <button class="button" @click="logout">
