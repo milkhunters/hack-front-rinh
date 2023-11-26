@@ -1,10 +1,10 @@
 <script setup>
-const props = defineProps({
-  name: {
+defineProps({
+  title: {
     type: String,
     required: true,
   },
-  date: {
+  content: {
     type: String,
     required: true,
   },
@@ -16,14 +16,12 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="card mb-4 " :style="{ backgroundColor: props.color }">
+  <div class="card mb-4" :style="{ backgroundColor: color }">
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="title is-5">
-            {{ props.name }}
-          </p>
-          <p class="subtitle is-6">{{ props.date }}</p>
+          <p class="title is-5">{{ title }}</p>
+          <p>{{ content }}</p>
         </div>
       </div>
     </div>

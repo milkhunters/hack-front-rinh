@@ -30,9 +30,9 @@ async function tryLogin() {
   };
 
   await userStore.login.mutate(data, {
-    onSuccess({ succeed, content }) {
+    onSuccess({ succeed }) {
       if (succeed) {
-        router.push({ name: "projects" });
+        router.push({ name: "tasks" });
       } else {
         error.value = "Неверный логин или пароль";
       }
