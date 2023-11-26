@@ -108,7 +108,8 @@ watch(
     <header :class="$style.header">
       <div :class="$style.left">
         <button class="button is-black is-medium is-bold"><b>RndTeam</b></button>
-
+        
+        <div class="is-flex ml-4">
           <div v-if="projectStore.userProjects.data?.length" class="select is-rounded ml-2">
             <select v-model="projectStore.currentProjectId">
               <option
