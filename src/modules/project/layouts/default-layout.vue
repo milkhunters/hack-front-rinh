@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import ModalComponent from "@/common/components/modal/modal-component.vue";
 import SignButton from "@/common/components/sign-button/sign-button.vue";
@@ -43,11 +43,6 @@ const dropdowns = reactive({
   notifications: false,
 });
 
-function toggleDropdown(key) {
-  closeAllDropdowns();
-  key.value = !key.value;
-}
-
 function closeAllDropdowns() {
   for (const key of Object.keys(dropdowns)) {
     dropdowns[key] = false;
@@ -84,6 +79,10 @@ watch(
     router.push({ query: { id: value } });
   },
 );
+
+function goToLogin() {
+  router.push({ name: "login" });
+}
 </script>
 
 <template>
@@ -145,12 +144,13 @@ watch(
         </div>
       </div>
       <div :class="$style.rigth">
-        <div v-if="userStore.user" :class="$style.avatar">
+        <div :class="$style.avatar">
           <div class="dropdown is-right" :class="{ 'is-active': dropdowns.user }">
             <div class="dropdown-trigger">
-              <button class="button" @click="logout">
+              <button v-if="userStore.user" class="button" @click="logout">
                 <b>{{ userStore.user?.firstName }}</b> - Выйти
               </button>
+              <button v-else class="button" @click="goToLogin">Войти</button>
             </div>
           </div>
         </div>

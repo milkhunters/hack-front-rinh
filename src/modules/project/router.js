@@ -13,7 +13,7 @@ export default [
     component: () => import("./views/join-view/join-view.vue"),
   },
   {
-    path: "/tasks",
+    path: "/",
     name: "tasks",
     component: TaskView,
     meta: { requiresAuth: true, load },
