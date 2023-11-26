@@ -156,33 +156,6 @@ function goToLogin() {
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, watch, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
-// Import other necessary components and functions
-
-const newProject = ref({ title: "", endTime: new Date() });
-const isProjectModalOpen = ref(false);
-
-// Rest of your reactive variables and functions
-
-// Detect mobile view
-const isMobileView = ref(false);
-
-function checkMobileView() {
-  isMobileView.value = window.innerWidth <= 768; // Adjust breakpoint as needed
-}
-
-window.addEventListener('resize', () => {
-  checkMobileView();
-});
-
-onMounted(() => {
-  checkMobileView();
-});
-
-</script>
-
 <style module lang="scss">
 /* Your existing styles... */
 

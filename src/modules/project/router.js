@@ -28,6 +28,6 @@ export default [
     path: "/graph",
     name: "graph",
     component: () => import("./views/graphs-view/graph-view.vue"),
-    meta: { requiresAuth: true, load: taskListLoader },
+    meta: { requiresAuth: true },
   }
 ];
