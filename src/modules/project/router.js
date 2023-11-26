@@ -27,7 +27,7 @@ export default [
   {
     path: "/graph",
     name: "graph",
-    component: () => import("./views/graphs-view/graph-view.vue"),
+    component: () => import("./views/graphs-view/graphs-view.vue"),
     meta: { requiresAuth: true },
-  }
+  },
 ];
