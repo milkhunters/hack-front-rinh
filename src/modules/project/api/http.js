@@ -2,7 +2,7 @@ import makeApiRequest from "@/common/api/http/make-api-request";
 
 export async function getAll() {
   const result = await makeApiRequest("/project/project/list", "GET");
-  return result.succeed ? result.content : [];
+  return result.succeed ? result.content ?? [] : [];
 }
 
 export async function create(data) {
@@ -25,7 +25,7 @@ export async function createColumn({ projectId, title }) {
 
 export async function getColumns(projectId) {
   const result = await makeApiRequest(`/kanban/column/list?project_id=${projectId}`, "GET");
-  return result.succeed ? result.content : [];
+  return result.succeed ? result.content ?? [] : [];
 }
 
 export async function createTask({ columnId, ...data }) {

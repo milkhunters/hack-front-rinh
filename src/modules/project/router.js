@@ -24,4 +24,10 @@ export default [
     component: () => import("./views/wiki-view/wiki-view.vue"),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/graph",
+    name: "graph",
+    component: () => import("./views/graphs-view/graphs-view.vue"),
+    meta: { requiresAuth: true },
+  },
 ];

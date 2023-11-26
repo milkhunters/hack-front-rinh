@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/vue-query": "^5.8.6",
     "bulma": "^0.9.4",
+    "echarts": "^5.4.3",
     "pinia": "^2.1.7",
     "sass": "^1.69.5",
     "vue": "^3.3.4",
