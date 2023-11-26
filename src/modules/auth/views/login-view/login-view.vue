@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import Spinner from "@/common/components/spinner/spinner-el.vue";
+import SignButton from "@/common/components/sign-button/sign-button.vue";
 import useLayout from "@/common/hooks/use-layout";
 import useUserStore from "@/modules/auth/stores/use-user-store";
 
@@ -9,7 +9,7 @@ useLayout("auth", { title: "Войдите в личный кабинет" });
 
 const userStore = useUserStore();
 
-const email = ref("");
+const username = ref("");
 const password = ref("");
 const error = ref(null);
 
@@ -20,33 +20,41 @@ function clearError() {
 const router = useRouter();
 
 async function tryLogin() {
-  const { succeed } = await userStore.login.mutate({
-    email: email.value,
-    password: password.value,
-  });
-
-  if (succeed) {
-    await router.push({ name: "projects" });
-  } else {
-    error.value = "Неправильный логин или пароль";
+  if (error.value) {
+    return;
   }
+
+  const data = {
+    username: username.value,
+    password: password.value,
+  };
+
+  await userStore.login.mutate(data, {
+    onSuccess({ succeed, content }) {
+      if (succeed) {
+        router.push({ name: "projects" });
+      } else {
+        error.value = "Неверный логин или пароль";
+      }
+    },
+  });
 }
 </script>
 
 <template>
   <form @submit.prevent="tryLogin">
     <p :class="$style.error_message" v-if="error">{{ error }}</p>
-    <label for="login">Адрес электронной почты</label>
+    <label for="login">Имя пользователя</label>
     <input
       :class="$style.login"
-      id="email"
+      id="login"
       type="text"
       @input="clearError"
-      v-model="email"
-      placeholder="Введите адрес электронной почты"
+      v-model="username"
+      placeholder="Введите имя пользователя"
     />
 
-    <label for="login">Пароль</label>
+    <label for="password">Пароль</label>
     <input
       :class="$style.password"
       id="password"
@@ -56,10 +64,7 @@ async function tryLogin() {
       placeholder="Введите пароль"
     />
 
-    <button :class="$style.login_button" type="submit">
-      <Spinner v-if="userStore.login.isPending.value" />
-      <template v-else>Войти</template>
-    </button>
+    <sign-button :is-loading="userStore.login.isPending" label="Войти" type="submit" />
 
     <router-link :class="$style.to_register" to="/register"> У меня нет аккаунта </router-link>
   </form>
@@ -98,22 +103,6 @@ label {
 .login:hover,
 .password:hover {
   border: 1px solid $primary-color;
-}
-
-.login_button {
-  width: 100%;
-  border: 0;
-  border-radius: 6px;
-  height: 40px;
-  max-height: 40px;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 0 15px;
-  cursor: pointer;
-  background: $primary-color;
-  color: rgb(255, 255, 255);
-  margin-top: 24px;
-  user-select: none;
 }
 
 .to_register {

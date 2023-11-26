@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { useMutation } from "@tanstack/vue-query";
 import { useApi } from "@/common/hooks/use-api";
@@ -9,22 +9,16 @@ const useConfirmationStore = defineStore("confirmation", () => {
   const api = useApi();
 
   const email = useStorage(CONFIRMATION_EMAIL_KEY, "");
-  const password = ref("");
 
   const sendMail = useMutation({
-    mutationFn: api.auth.sendMail,
+    mutationFn: () => api.auth.sendMail(email.value),
   });
 
   const sendCode = useMutation({
-    mutationFn: api.auth.sendCode,
+    mutationFn: (code) => api.auth.sendCode({ email: email.value, code }),
   });
 
-  function clear() {
-    email.value = null;
-    password.value = null;
-  }
-
-  return { email, password, sendMail, sendCode, clear };
+  return { email, sendMail, sendCode };
 });
 
 export default useConfirmationStore;
