@@ -8,11 +8,13 @@ defineProps({
     type: Boolean,
     required: true,
   },
-  close: {
-    type: Function,
-    required: true,
-  },
 });
+
+const emit = defineEmits(["close"]);
+
+function close() {
+  emit("close");
+}
 </script>
 
 <template>

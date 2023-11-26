@@ -1,11 +1,15 @@
 import makeApiRequest from "@/common/api/http/make-api-request";
 
+export async function getUser() {
+  return await makeApiRequest("/ums/user", "GET");
+}
+
 export async function login(data) {
   return await makeApiRequest("/ums/auth/signIn", "POST", { data });
 }
 
 export async function logout() {
-  return await makeApiRequest("/ums/auth/signOut", "POST");
+  return await makeApiRequest("/ums/auth/logout", "POST");
 }
 
 export async function register(data) {

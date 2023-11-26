@@ -1,6 +1,6 @@
 import { toCamelCase, toSnakeCase } from "./format";
 
-const REFRESH_TOKENS_URL = `${import.meta.env.VITE_API_URL}/ums/auth/refresh_tokens`;
+const REFRESH_TOKENS_URL = `/ums/auth/refresh_tokens`;
 
 export default async function makeApiRequest(
   service,
