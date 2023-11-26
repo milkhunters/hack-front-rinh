@@ -114,15 +114,7 @@ function goToLogin() {
     <header :class="$style.header">
       <div :class="$style.left">
         <div class="is-black is-medium is-bold"><b>RndTeam</b></div>
-
         <div class="is-flex ml-4">
-          <div class="select is-rounded">
-            <select @change="changeBoard">
-              <option value="tasks">Доска</option>
-              <option value="wiki">Вики</option>
-            </select>
-          </div>
-
           <div v-if="projectStore.userProjects.data?.length" class="select is-rounded ml-2">
             <select v-model="projectStore.currentProjectId">
               <option
@@ -135,6 +127,8 @@ function goToLogin() {
             </select>
           </div>
 
+          <project-button @click="changeBoard('tasks')" label="Доска" />
+          <project-button @click="changeBoard('wiki')" label="Вики" />
           <project-button @click="openProjectModal" label="Новый проект" />
           <project-button
             v-if="projectStore.currentProjectId"
@@ -162,44 +156,55 @@ function goToLogin() {
   </div>
 </template>
 
+<script setup>
+import { ref, reactive, watch, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+// Import other necessary components and functions
+
+const newProject = ref({ title: "", endTime: new Date() });
+const isProjectModalOpen = ref(false);
+
+// Rest of your reactive variables and functions
+
+// Detect mobile view
+const isMobileView = ref(false);
+
+function checkMobileView() {
+  isMobileView.value = window.innerWidth <= 768; // Adjust breakpoint as needed
+}
+
+window.addEventListener('resize', () => {
+  checkMobileView();
+});
+
+onMounted(() => {
+  checkMobileView();
+});
+
+</script>
+
 <style module lang="scss">
-.flow {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
+/* Your existing styles... */
 
-.main {
-  width: 100%;
-  height: calc(100% - 70px);
-}
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .flow {
+    height: auto;
+  }
 
-.header {
-  height: 70px;
-  display: flex;
-  grid-area: "header";
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
-  background-color: white;
-  border-bottom: 1px solid grey;
-}
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 20px 10px; /* Adjust padding as needed */
+  }
 
-.left {
-  display: flex;
-  align-items: center;
-  width: 400px;
-}
+  .left, .right {
+    width: 100%;
+    margin-bottom: 10px; /* Adjust spacing as needed */
+  }
 
-.rigth {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 180px;
-}
-
-.notifications {
-  font-size: 24px;
-  font-weight: bold;
+  .right {
+    order: -1; /* Reorder right section for mobile view */
+  }
 }
 </style>
