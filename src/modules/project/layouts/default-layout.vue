@@ -72,6 +72,13 @@ function logout() {
 const route = useRoute();
 
 watch(
+  () => route.query.id,
+  (value) => {
+    projectStore.currentProjectId = value;
+  },
+);
+
+watch(
   () => projectStore.currentProjectId,
   (value) => {
     router.push({ query: { id: value } });
@@ -107,7 +114,7 @@ watch(
   <div :class="$style.flow" @click.stop="closeAllDropdowns">
     <header :class="$style.header">
       <div :class="$style.left">
-        <button class="button is-black is-medium is-bold"><b>RndTeam</b></button>
+        <div class="is-black is-medium is-bold"><b>RndTeam</b></div>
 
         <div class="is-flex ml-4">
           <div class="select is-rounded">
@@ -138,23 +145,6 @@ watch(
         </div>
       </div>
       <div :class="$style.rigth">
-        <div :class="$style.notifications">
-          <div class="dropdown is-right" :class="{ 'is-active': dropdowns.notifications }">
-            <div class="dropdown-trigger">
-              <i @click="toggleDropdown(dropdowns.notifications)" class="fi fi-rr-cowbell"></i>
-            </div>
-            <div class="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="#" class="dropdown-item is-size-4"><b>Уведомления 🔔</b></a>
-                <hr class="dropdown-divider" />
-                <a href="#" class="dropdown-item"> У вас собрания в 11:00 по МСК времени </a>
-                <a class="dropdown-item"> Вам назначили новую карточку </a>
-                <a href="#" class="dropdown-item"> Вас добавили в проект "Frontend" </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div v-if="userStore.user" :class="$style.avatar">
           <div class="dropdown is-right" :class="{ 'is-active': dropdowns.user }">
             <div class="dropdown-trigger">

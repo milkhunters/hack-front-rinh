@@ -30,9 +30,9 @@ const useProjectStore = defineStore("project", () => {
 
   const createColumnMutation = useCreateProjectColumnMutation(currentProjectId);
 
-  function createColumn(title) {
+  function createColumn(title, ops) {
     if (currentProjectId.value) {
-      createColumnMutation.mutate(title);
+      createColumnMutation.mutate(title, ops);
     }
   }
 

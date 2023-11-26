@@ -1,5 +1,10 @@
 import TaskView from "./views/task-view/task-view.vue";
-import { projectListLoader } from "@/modules/project/loader";
+import { columnListLoader, projectListLoader } from "@/modules/project/loader";
+
+function load(context) {
+  projectListLoader(context);
+  columnListLoader(context);
+}
 
 export default [
   {
@@ -11,7 +16,7 @@ export default [
     path: "/tasks",
     name: "tasks",
     component: TaskView,
-    meta: { requiresAuth: true, load: projectListLoader },
+    meta: { requiresAuth: true, load },
   },
   {
     path: "/wiki",
